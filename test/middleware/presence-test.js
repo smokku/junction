@@ -60,8 +60,8 @@ vows.describe('presence').addBatch({
         var self = this;
         var pres = new junction.XMLElement('presence', { from: 'romeo@example.net/orchard', type: 'error' });
         
-        handler.on('err', function(stanza) {
-          self.callback(null, 'err', stanza);
+        handler.on('error', function(stanza) {
+          self.callback(null, 'error', stanza);
         });
         process.nextTick(function () {
           middleware(pres, function(err){});
@@ -69,7 +69,7 @@ vows.describe('presence').addBatch({
       },
       
       'should emit err event with stanza' : function(err, event, stanza) {
-        assert.equal(event, 'err');
+        assert.equal(event, 'error');
         assert.instanceOf(stanza, junction.XMLElement);
       },
     },

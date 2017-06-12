@@ -60,16 +60,16 @@ vows.describe('message').addBatch({
         var self = this;
         var msg = new junction.XMLElement('message', { from: 'romeo@example.net/orchard', type: 'error' });
         
-        handler.on('err', function(stanza) {
-          self.callback(null, 'err', stanza);
+        handler.on('error', function(stanza) {
+          self.callback(null, 'error', stanza);
         });
         process.nextTick(function () {
           middleware(msg, function(err){});
         });
       },
       
-      'should emit err event with stanza' : function(err, event, stanza) {
-        assert.equal(event, 'err');
+      'should emit error event with stanza' : function(err, event, stanza) {
+        assert.equal(event, 'error');
         assert.instanceOf(stanza, junction.XMLElement);
       },
     },

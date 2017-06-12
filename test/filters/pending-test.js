@@ -1,8 +1,8 @@
 var vows = require('vows');
 var assert = require('assert');
-var xmpp = require('node-xmpp');
+var xmpp = require('node-xmpp-core');
 var util = require('util');
-var JID = require('node-xmpp').JID;
+var JID = require('node-xmpp-core').JID;
 var pending = require('junction/filters/pending');
 
 

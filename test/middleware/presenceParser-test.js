@@ -1,6 +1,6 @@
 var vows = require('vows');
 var assert = require('assert');
-var xmpp = require('node-xmpp');
+var xmpp = require('node-xmpp-core');
 var util = require('util');
 var junction = require('junction');
 var presenceParser = require('junction/middleware/presenceParser');
