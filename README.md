@@ -33,8 +33,8 @@ Anytime a message is received, we send a greeting and echo the message body.
 
     app.use(junction.message(function(handler) {
       handler.on('chat', function(stanza) {
-        var msg = new Message(stanza.from);
-        msg.c('body', {}).t('Hello ' + stanza.from + '!\n\n' +
+        var msg = new Message(stanza.attrs.from);
+        msg.c('body', {}).t('Hello ' + stanza.attrs.from + '!\n\n' +
                             'You said: ' + stanza.body);
         stanza.connection.send(msg);
       });

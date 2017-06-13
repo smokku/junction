@@ -12,18 +12,18 @@ var app = junction.create();
 
 app.use(junction.presence(function(handler) {
   handler.on('available', function(stanza) {
-    console.log(stanza.from + ' is available');
+    console.log(stanza.attrs.from + ' is available');
   });
   handler.on('unavailable', function(stanza) {
-    console.log(stanza.from + ' is unavailable');
+    console.log(stanza.attrs.from + ' is unavailable');
   });
 }));
 
 app.use(junction.messageParser());
 app.use(junction.message(function(handler) {
   handler.on('chat', function(stanza) {
-    var msg = new Message(stanza.from);
-    msg.c('body', {}).t('Hello ' + stanza.from + '!\n\n' + 'You said: ' + stanza.body);
+    var msg = new Message(stanza.attrs.from);
+    msg.c('body', {}).t('Hello ' + stanza.attrs.from + '!\n\n' + 'You said: ' + stanza.body);
     stanza.connection.send(msg);
   });
 }));

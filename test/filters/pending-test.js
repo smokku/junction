@@ -1,8 +1,7 @@
 var vows = require('vows');
 var assert = require('assert');
-var xmpp = require('node-xmpp-core');
+var xml = require('@xmpp/xml');
 var util = require('util');
-var JID = require('node-xmpp-core').JID;
 var pending = require('junction/filters/pending');
 
 
@@ -47,7 +46,7 @@ vows.describe('pending').addBatch({
     'when processing an outgoing stanza with pending data': {
       topic: function(pending, store) {
         var self = this;
-        var res = new xmpp.Stanza('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'iq_1' });
+        var res = new xml.Element('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'iq_1' });
         res.pending = {};
         res.pending.action = 'open';
         
@@ -70,7 +69,7 @@ vows.describe('pending').addBatch({
     'when processing an outgoing stanza without pending data': {
       topic: function(pending, store) {
         var self = this;
-        var res = new xmpp.Stanza('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'iq_2' });
+        var res = new xml.Element('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'iq_2' });
         
         function next(err) {
           store.get('plays.shakespeare.lit:iq_2', function(err, data) {
@@ -90,7 +89,7 @@ vows.describe('pending').addBatch({
     'when processing an outgoing stanza without an ID': {
       topic: function(pending, store) {
         var self = this;
-        var res = new xmpp.Stanza('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard' });
+        var res = new xml.Element('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard' });
         res.pending = {};
         res.pending.action = 'noop';
         
@@ -125,8 +124,7 @@ vows.describe('pending').addBatch({
     'when processing an outgoing stanza with pending data': {
       topic: function(pending, store) {
         var self = this;
-        var res = new xmpp.Stanza('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'iq_1' });
-        res.id = 'iq_1';
+        var res = new xml.Element('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'iq_1' });
         res.pending = {};
         res.pending.action = 'open';
         

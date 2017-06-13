@@ -14,10 +14,10 @@ var connection = junction.create();
 
 connection.use(junction.presence(function(handler) {
   handler.on('available', function(stanza) {
-    console.log(stanza.from + ' is available');
+    console.log(stanza.attrs.from + ' is available');
   });
   handler.on('unavailable', function(stanza) {
-    console.log(stanza.from + ' is unavailable');
+    console.log(stanza.attrs.from + ' is unavailable');
   });
 }));
 

@@ -1,7 +1,7 @@
 var vows = require('vows');
 var assert = require('assert');
 var events = require('events');
-var xmpp = require('node-xmpp-core');
+var xml = require('@xmpp/xml');
 var util = require('util');
 var StanzaError = require('junction/stanzaerror');
 var errorHandler = require('junction/middleware/errorHandler');
@@ -22,8 +22,8 @@ vows.describe('errorHandler').addBatch({
         }
         
         var err = new Error();
-        var req = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
-        var res = new xmpp.Stanza('iq', { type: 'result', to: 'juliet@example.com', from: 'romeo@example.net' });
+        var req = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var res = new xml.Element('iq', { type: 'result', to: 'juliet@example.com', from: 'romeo@example.net' });
         res.send = function() {
           promise.emit('success', res);
         }
@@ -56,8 +56,8 @@ vows.describe('errorHandler').addBatch({
         
         var err = new StanzaError('format your exml', 'modify', 'bad-request');
         err.specificCondition = { name: 'bar', xmlns: 'urn:foo' };
-        var req = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
-        var res = new xmpp.Stanza('iq', { type: 'result', to: 'juliet@example.com', from: 'romeo@example.net' });
+        var req = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var res = new xml.Element('iq', { type: 'result', to: 'juliet@example.com', from: 'romeo@example.net' });
         res.send = function() {
           promise.emit('success', res);
         }
@@ -99,7 +99,7 @@ vows.describe('errorHandler').addBatch({
         }
         
         var err = new StanzaError('fail');
-        var req = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var req = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
         
         process.nextTick(function () {
           errorHandler(err, req, null, next)
@@ -126,8 +126,8 @@ vows.describe('errorHandler').addBatch({
         }
         
         var err = new StanzaError('format your exml', 'modify', 'bad-request');
-        var req = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
-        var res = new xmpp.Stanza('iq', { type: 'result', to: 'juliet@example.com', from: 'romeo@example.net' });
+        var req = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var res = new xml.Element('iq', { type: 'result', to: 'juliet@example.com', from: 'romeo@example.net' });
         res.send = function() {
           promise.emit('success', res);
         }

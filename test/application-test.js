@@ -1,38 +1,12 @@
 var vows = require('vows');
 var assert = require('assert');
 var events = require('events');
-var xmpp = require('node-xmpp-core');
+var xml = require('@xmpp/xml');
 var util = require('util');
 var junction = require('junction');
 
 
 vows.describe('application').addBatch({
-  
-  // NOTE: Disabled by default to avoid network access while running tests.
-  /*
-  'connect as an XMPP client': {
-    topic: function() {
-      return new junction.create().connect({ type: 'client', jid: 'user@invalid.host', disableStream: true });
-    },
-    
-    'should be an instance of Client': function (c) {
-      assert.instanceOf(c, xmpp.Client);
-    },
-  },
-  */
-  
-  // NOTE: Disabled by default to avoid network access while running tests.
-  /*
-  'connect as an XMPP component': {
-    topic: function() {
-      return new junction.create().connect({ type: 'component', jid: 'component.invalid.host', host: 'invalid.host', port: 5060, disableStream: true });
-    },
-    
-    'should be an instance of Component': function (c) {
-      assert.instanceOf(c, xmpp.Component);
-    },
-  },
-  */
   
   'initialization': {
     topic: function() {
@@ -45,7 +19,6 @@ vows.describe('application').addBatch({
       assert.isFunction(app.handle);
       assert.isFunction(app.send);
       assert.isFunction(app.setup);
-      assert.isFunction(app.connect);
     },
     'should have an empty stack': function (app) {
       assert.lengthOf(app._stack, 0);
@@ -74,17 +47,13 @@ vows.describe('application').addBatch({
         self.callback(null, req, res, next);
       });
       process.nextTick(function () {
-        var iq = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com', id: '1' });
+        var iq = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com', id: '1' });
         connection.emit('stanza', iq);
       });
     },
     
     'should dispatch correct objects': function (err, req, res, next) {
       assert.isNotNull(req);
-      assert.equal(req.id, 1);
-      assert.equal(req.from, 'juliet@example.com');
-      assert.equal(req.to, 'romeo@example.net');
-      assert.equal(req.type, 'get');
       assert.equal(req.attrs.id, 1);
       assert.equal(req.attrs.from, 'juliet@example.com');
       assert.equal(req.attrs.to, 'romeo@example.net');
@@ -113,7 +82,7 @@ vows.describe('application').addBatch({
         self.callback(null, req, res, next);
       });
       process.nextTick(function () {
-        var iq = new xmpp.Stanza('iq', { type: 'set', to: 'romeo@example.net', from: 'juliet@example.com', id: '1' });
+        var iq = new xml.Element('iq', { type: 'set', to: 'romeo@example.net', from: 'juliet@example.com', id: '1' });
         connection.emit('stanza', iq);
       });
     },
@@ -145,7 +114,7 @@ vows.describe('application').addBatch({
         self.callback(null, stanza, res, next);
       });
       process.nextTick(function () {
-        var iq = new xmpp.Stanza('iq', { type: 'result', to: 'romeo@example.net', from: 'juliet@example.com', id: '1' });
+        var iq = new xml.Element('iq', { type: 'result', to: 'romeo@example.net', from: 'juliet@example.com', id: '1' });
         connection.emit('stanza', iq);
       });
     },
@@ -172,7 +141,7 @@ vows.describe('application').addBatch({
         self.callback(null, stanza, res, next);
       });
       process.nextTick(function () {
-        var iq = new xmpp.Element('iq', { type: 'error', to: 'romeo@example.net', from: 'juliet@example.com', id: '1' });
+        var iq = new xml.Element('iq', { type: 'error', to: 'romeo@example.net', from: 'juliet@example.com', id: '1' });
         connection.emit('stanza', iq);
       });
     },
@@ -199,16 +168,13 @@ vows.describe('application').addBatch({
         self.callback(null, stanza, next);
       });
       process.nextTick(function () {
-        var message = new xmpp.Stanza('message', { type: 'chat', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var message = new xml.Element('message', { type: 'chat', to: 'romeo@example.net', from: 'juliet@example.com' });
         connection.emit('stanza', message);
       });
     },
     
     'should dispatch correct objects': function (err, stanza, next) {
       assert.isNotNull(stanza);
-      assert.equal(stanza.from, 'juliet@example.com');
-      assert.equal(stanza.to, 'romeo@example.net');
-      assert.equal(stanza.type, 'chat');
       assert.equal(stanza.attrs.from, 'juliet@example.com');
       assert.equal(stanza.attrs.to, 'romeo@example.net');
       assert.equal(stanza.attrs.type, 'chat');
@@ -229,16 +195,13 @@ vows.describe('application').addBatch({
         self.callback(null, stanza, next);
       });
       process.nextTick(function () {
-        var presence = new xmpp.Stanza('presence', { type: 'probe', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var presence = new xml.Element('presence', { type: 'probe', to: 'romeo@example.net', from: 'juliet@example.com' });
         connection.emit('stanza', presence);
       });
     },
     
     'should dispatch correct objects': function (err, stanza, next) {
       assert.isNotNull(stanza);
-      assert.equal(stanza.from, 'juliet@example.com');
-      assert.equal(stanza.to, 'romeo@example.net');
-      assert.equal(stanza.type, 'probe');
       assert.equal(stanza.attrs.from, 'juliet@example.com');
       assert.equal(stanza.attrs.to, 'romeo@example.net');
       assert.equal(stanza.attrs.type, 'probe');
@@ -264,7 +227,7 @@ vows.describe('application').addBatch({
         self.callback(null, req, res);
       });
       process.nextTick(function () {
-        var iq = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var iq = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
         connection.emit('stanza', iq);
       });
     },
@@ -309,7 +272,7 @@ vows.describe('application').addBatch({
       
       app.setup(connection);
       process.nextTick(function () {
-        var iq = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var iq = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
         connection.emit('stanza', iq);
       });
     },
@@ -353,7 +316,7 @@ vows.describe('application').addBatch({
         self.callback(null, req, res);
       });
       process.nextTick(function () {
-        var iq = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var iq = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
         connection.emit('stanza', iq);
       });
     },
@@ -385,7 +348,7 @@ vows.describe('application').addBatch({
         next();
       });
       process.nextTick(function () {
-        var el = new xmpp.Element('iq', { id: '1',
+        var el = new xml.Element('iq', { id: '1',
                                           to: 'juliet@capulet.com/balcony',
                                           type: 'result' });
         connection.send(el);
@@ -393,7 +356,7 @@ vows.describe('application').addBatch({
     },
     
     'should dispatch xmpp element': function (err, stanza) {
-      assert.instanceOf(stanza, xmpp.Element);
+      assert.instanceOf(stanza, xml.Element);
     },
     'should dispatch to several filters': function (err, stanza) {
       assert.isTrue(stanza.call1);
@@ -434,7 +397,7 @@ vows.describe('application').addBatch({
         next();
       });
       process.nextTick(function () {
-        var el = new xmpp.Element('iq', { id: '1',
+        var el = new xml.Element('iq', { id: '1',
                                           to: 'juliet@capulet.com/balcony',
                                           type: 'result' });
         connection.send(el);
@@ -442,7 +405,7 @@ vows.describe('application').addBatch({
     },
     
     'should dispatch xmpp element': function (err, stanza) {
-      assert.instanceOf(stanza, xmpp.Element);
+      assert.instanceOf(stanza, xml.Element);
     },
     'should dispatch to several filters': function (err, stanza) {
       assert.strictEqual(stanza.parentCall1, 1);
@@ -488,13 +451,13 @@ vows.describe('application').addBatch({
       var app = junction();
       app.setup(connection);
       app.filter(function(stanza, next) {
-        if (!(stanza instanceof xmpp.Element)) {
+        if (!(stanza instanceof xml.Element)) {
           self.callback(new Error('stanza should be an XML element'));
         }
         next();
       });
       
-      var el = new xmpp.Element('iq', { id: '1',
+      var el = new xml.Element('iq', { id: '1',
                                         to: 'juliet@capulet.com/balcony',
                                         type: 'result' });
       connection.send(el);
@@ -506,7 +469,7 @@ vows.describe('application').addBatch({
     },
   },
   
-  'send() with junction.Element argument': {
+  'send() with junction.XMLElement argument': {
     topic: function() {
       var self = this;
       // mock connection
@@ -518,13 +481,13 @@ vows.describe('application').addBatch({
       var app = junction();
       app.setup(connection);
       app.filter(function(stanza, next) {
-        if (!(stanza instanceof xmpp.Stanza)) {
+        if (!(stanza instanceof junction.XMLElement)) {
           self.callback(new Error('stanza should be an XMPP stanza'));
         }
         next();
       });
       
-      var message = new xmpp.Stanza('message', { to: 'juliet@example.com' })
+      var message = new junction.XMLElement('message', { to: 'juliet@example.com' })
       connection.send(message);
     },
     

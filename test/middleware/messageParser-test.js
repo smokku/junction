@@ -1,6 +1,6 @@
 var vows = require('vows');
 var assert = require('assert');
-var xmpp = require('node-xmpp-core');
+var xml = require('@xmpp/xml');
 var util = require('util');
 var junction = require('junction');
 var messageParser = require('junction/middleware/messageParser');
@@ -46,7 +46,7 @@ vows.describe('messageParser').addBatch({
     'when handling a non-message stanza': {
       topic: function(messageParser) {
         var self = this;
-        var iq = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var iq = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
         
         function next(err) {
           self.callback(err, iq);

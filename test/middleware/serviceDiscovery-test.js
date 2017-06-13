@@ -1,6 +1,6 @@
 var vows = require('vows');
 var assert = require('assert');
-var xmpp = require('node-xmpp-core');
+var xml = require('@xmpp/xml');
 var util = require('util');
 var StanzaError = require('junction/stanzaerror');
 var serviceDiscovery = require('junction/middleware/serviceDiscovery');
@@ -19,9 +19,9 @@ vows.describe('serviceDiscovery').addBatch({
     'when handling a service discovery request': {
       topic: function(serviceDiscovery) {
         var self = this;
-        var req = new xmpp.Stanza('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'info1' });
+        var req = new xml.Element('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'info1' });
         req.c('query', { xmlns: 'http://jabber.org/protocol/disco#info' }).up();
-        var res = new xmpp.Stanza('iq', { id: req.attrs.id,
+        var res = new xml.Element('iq', { id: req.attrs.id,
                                            to: req.attrs.from,
                                            type: 'result' });
         
@@ -50,9 +50,9 @@ vows.describe('serviceDiscovery').addBatch({
     'when handling a service discovery request to a node': {
       topic: function(serviceDiscovery) {
         var self = this;
-        var req = new xmpp.Stanza('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'info1' });
+        var req = new xml.Element('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'info1' });
         req.c('query', { xmlns: 'http://jabber.org/protocol/disco#info', node: 'books' }).up();
-        var res = new xmpp.Stanza('iq', { id: req.attrs.id,
+        var res = new xml.Element('iq', { id: req.attrs.id,
                                            to: req.attrs.from,
                                            type: 'result' });
         
@@ -77,9 +77,9 @@ vows.describe('serviceDiscovery').addBatch({
     'when handling a non-IQ-get service discovery request': {
       topic: function(serviceDiscovery) {
         var self = this;
-        var req = new xmpp.Stanza('iq', { type: 'set', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'info1' });
+        var req = new xml.Element('iq', { type: 'set', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'info1' });
         req.c('query', { xmlns: 'http://jabber.org/protocol/disco#info' }).up();
-        var res = new xmpp.Stanza('iq', { id: req.attrs.id,
+        var res = new xml.Element('iq', { id: req.attrs.id,
                                            to: req.attrs.from,
                                            type: 'result' });
         
@@ -104,8 +104,8 @@ vows.describe('serviceDiscovery').addBatch({
     'when handling an IQ stanza that is not a service discovery request': {
       topic: function(softwareVersion) {
         var self = this;
-        var iq = new xmpp.Stanza('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
-        var res = new xmpp.Stanza('iq', { id: iq.attrs.id,
+        var iq = new xml.Element('iq', { type: 'get', to: 'romeo@example.net', from: 'juliet@example.com' });
+        var res = new xml.Element('iq', { id: iq.attrs.id,
                                            to: iq.attrs.from,
                                            type: 'result' });
         
@@ -138,9 +138,9 @@ vows.describe('serviceDiscovery').addBatch({
     'when handling a service discovery request': {
       topic: function(serviceDiscovery) {
         var self = this;
-        var req = new xmpp.Stanza('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'info1' });
+        var req = new xml.Element('iq', { type: 'get', to: 'plays.shakespeare.lit', from: 'romeo@montague.net/orchard', id: 'info1' });
         req.c('query', { xmlns: 'http://jabber.org/protocol/disco#info' }).up();
-        var res = new xmpp.Stanza('iq', { id: req.attrs.id,
+        var res = new xml.Element('iq', { id: req.attrs.id,
                                            to: req.attrs.from,
                                            type: 'result' });
         

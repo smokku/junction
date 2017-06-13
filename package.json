@@ -2,7 +2,11 @@
   "name": "junction",
   "version": "0.2.0",
   "description": "Essential XMPP middleware for Node.js.",
-  "keywords": ["xmpp", "jabber", "middleware"],
+  "keywords": [
+    "xmpp",
+    "jabber",
+    "middleware"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/jaredhanson/junction.git"
@@ -10,15 +14,21 @@
   "bugs": {
     "url": "http://github.com/jaredhanson/junction/issues"
   },
-  "author": { "name": "Jared Hanson", "email": "jaredhanson@gmail.com", "url": "http://www.jaredhanson.net/" },
-  "licenses": [ {
-    "type": "MIT",
-    "url": "http://www.opensource.org/licenses/MIT" 
-  } ],
+  "author": {
+    "name": "Jared Hanson",
+    "email": "jaredhanson@gmail.com",
+    "url": "http://www.jaredhanson.net/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
   "main": "./lib/junction",
   "dependencies": {
-    "pkginfo": "0.2.x",
-    "node-xmpp-core": "5.x.x",
+    "@xmpp/jid": "0.0.2",
+    "@xmpp/xml": "^0.1.3",
     "debug": "0.7.x"
   },
   "devDependencies": {
@@ -27,5 +37,7 @@
   "scripts": {
     "test": "NODE_PATH=lib node_modules/.bin/vows test/*-test.js test/**/*-test.js test/**/**/*-test.js"
   },
-  "engines": { "node": ">= 0.4.0" }
+  "engines": {
+    "node": ">= 0.4.0"
+  }
 }

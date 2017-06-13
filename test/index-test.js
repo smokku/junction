@@ -15,7 +15,6 @@ vows.describe('junction').addBatch({
   'should export constructors': function() {
     assert.isFunction(junction.JID);
     assert.isFunction(junction.XMLElement);
-    assert.isFunction(junction.XMPPStanza);
   },
   
   'should export errors': function() {
